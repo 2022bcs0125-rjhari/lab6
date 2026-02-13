@@ -130,8 +130,9 @@ pipeline {
     // Artifact Archiving
     // =========================
     post {
-        always {
-            archiveArtifacts artifacts: 'app/artifacts/**', fingerprint: true
-        }
+    always {
+        archiveArtifacts artifacts: 'app/artifacts/**', fingerprint: true
     }
+}
+
 }
