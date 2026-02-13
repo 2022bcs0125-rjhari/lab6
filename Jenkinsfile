@@ -103,8 +103,8 @@ pipeline {
                 )]) {
                     sh '''
                     echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                    docker build -t $DOCKER_USER/wine-infer:${BUILD_NUMBER} .
-                    docker tag $DOCKER_USER/wine-infer:${BUILD_NUMBER} $DOCKER_USER/wine-infer:latest
+                    docker build -t $DOCKER_USER/wine-infer-jenkins:${BUILD_NUMBER} .
+                    docker tag $DOCKER_USER/wine-infer-jenkins:${BUILD_NUMBER} $DOCKER_USER/wine-infer-jenkins:latest
                     '''
                 }
             }
@@ -119,8 +119,8 @@ pipeline {
             }
             steps {
                 sh '''
-                docker push $DOCKER_USER/wine-infer:${BUILD_NUMBER}
-                docker push $DOCKER_USER/wine-infer:latest
+                docker push $DOCKER_USER/wine-infer-jenkins:${BUILD_NUMBER}
+                docker push $DOCKER_USER/wine-infer-jenkins:latest
                 '''
             }
         }
