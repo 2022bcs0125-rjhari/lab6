@@ -70,7 +70,7 @@ pipeline {
             steps {
                 script {
 
-                    withCredentials([string(credentialsId: 'best-accuracy', variable: 'BEST_R2')]) {
+                    withCredentials([string(credentialsId: 'BEST_R2', variable: 'BEST_R2')]) {
 
                         echo "Best Stored R2: ${BEST_R2}"
                         echo "Current R2    : ${env.CUR_R2}"
