@@ -71,7 +71,7 @@ pipeline {
         script {
 
             withCredentials([
-                string(credentialsId: 'best-accuracy', variable: 'BEST_R2'),
+                string(credentialsId: 'BEST_R2', variable: 'BEST_R2'),
                 string(credentialsId: 'BEST_MSE', variable: 'BEST_MSE_VAL')
             ]) {
 
