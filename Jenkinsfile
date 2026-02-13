@@ -67,26 +67,34 @@ pipeline {
         // Stage 5: Compare R2 and MSE
         // =========================
         stage('Compare R2 and MSE') {
-            steps {
-                script {
+        steps {
+        script {
 
-                    withCredentials([string(credentialsId: 'BEST_R2', variable: 'BEST_R2')]) {
+            withCredentials([
+                string(credentialsId: 'best-accuracy', variable: 'BEST_R2'),
+                string(credentialsId: 'BEST_MSE', variable: 'BEST_MSE_VAL')
+            ]) {
 
-                        echo "Best Stored R2: ${BEST_R2}"
-                        echo "Current R2    : ${env.CUR_R2}"
-                        echo "Current MSE   : ${env.CUR_MSE}"
+                def curR2 = env.CUR_R2.toFloat()
+                def bestR2 = BEST_R2.toFloat()
 
-                        if (env.CUR_R2.toFloat() > BEST_R2.toFloat()) {
-                            env.BUILD_DOCKER = "true"
-                            echo "R2 improved. Docker build will proceed."
-                        } else {
-                            env.BUILD_DOCKER = "false"
-                            echo "R2 did not improve. Skipping Docker build."
+                def curMSE = env.CUR_MSE.toFloat()
+                def bestMSE = BEST_MSE_VAL.toFloat()
+
+                echo "Comparing model performance..."
+
+                if (curR2 > bestR2 && curMSE < bestMSE) {
+                    env.BUILD_DOCKER = "true"
+                    echo "Model improved (Higher R2 & Lower MSE). Docker build will proceed."
+                } else {
+                    env.BUILD_DOCKER = "false"
+                    echo "Model NOT improved. Skipping Docker build."
                         }
                     }
                 }
             }
         }
+
 
         // =========================
         // Stage 6: Build Docker Image (Conditional)
@@ -118,12 +126,19 @@ pipeline {
                 expression { env.BUILD_DOCKER == "true" }
             }
             steps {
-                sh '''
-                docker push $DOCKER_USER/wine-infer-jenkins:${BUILD_NUMBER}
-                docker push $DOCKER_USER/wine-infer-jenkins:latest
-                '''
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh '''
+                    docker push $DOCKER_USER/wine-infer-jenkins:${BUILD_NUMBER}
+                    docker push $DOCKER_USER/wine-infer-jenkins:latest
+                    '''
+                }
             }
         }
+
     }
 
     // =========================
