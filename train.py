@@ -11,11 +11,13 @@ ROLL = "2022BCS0125"
 
 # ---------------- PATHS ----------------
 DATA_PATH = "dataset/winequality-red.csv"
-OUTPUT_DIR = Path("output")
-OUTPUT_DIR.mkdir(exist_ok=True)
+
+OUTPUT_DIR = Path("app/artifacts")
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 MODEL_PATH = OUTPUT_DIR / "model.pkl"
-RESULTS_PATH = OUTPUT_DIR / "results.json"
+RESULTS_PATH = OUTPUT_DIR / "metrics.json"
+
 
 # ---------------- LOAD DATA ----------------
 data = pd.read_csv(DATA_PATH, sep=";")
@@ -78,6 +80,7 @@ print("Name:", NAME)
 print("Roll:", ROLL)
 print("MSE:", mse)
 print("R2:", r2)
+
 
 
 
