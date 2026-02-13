@@ -32,16 +32,25 @@ X_train, X_test, y_train, y_test = train_test_split(
 # ===============================
 # 🔴 EXPERIMENT-SPECIFIC CODE HERE
 # ===============================
-from sklearn.linear_model import Ridge
+import xgboost as xgb
 
-EXP_ID = "EXP-01"
-MODEL_NAME = "Ridge Regression (alpha=1.0)"
+EXP_ID = "EXP-07"
+MODEL_NAME = "XGBoost fully tuned"
 
-scaler = StandardScaler()
-X_train_proc = scaler.fit_transform(X_train)
-X_test_proc = scaler.transform(X_test)
+X_train_proc = X_train
+X_test_proc = X_test
 
-model = Ridge(alpha=1.0)
+model = xgb.XGBRegressor(
+    n_estimators=600,
+    learning_rate=0.03,
+    max_depth=6,
+    subsample=0.8,
+    colsample_bytree=0.8,
+    reg_alpha=0.1,
+    reg_lambda=1.0,
+    random_state=42
+)
+
 
 
 
@@ -73,6 +82,7 @@ print("Name:", NAME)
 print("Roll:", ROLL)
 print("MSE:", mse)
 print("R2:", r2)
+
 
 
 
